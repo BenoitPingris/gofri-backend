@@ -6,7 +6,7 @@ import bcrypt
 class User(Model):
     id = fields.UUIDField(pk=True)
     username = fields.CharField(25, unique=True)
-    password = fields.CharField(255)
+    password = fields.BinaryField()
     admin = fields.BooleanField(default=False)
     created_at = fields.DatetimeField(auto_now_add=True)
 

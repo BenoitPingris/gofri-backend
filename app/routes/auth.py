@@ -24,6 +24,27 @@ async def login(data: Login, Authorize: AuthJWT = Depends()):
     except DoesNotExist:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
     if user.verify_password(data.password):
-        access_token = Authorize.create_access_token(subject=user.username)
-        return {'access_token': access_token}
+        access_token = Authorize.create_access_token(
+            subject=user.username, user_claims={'admin': user.admin})
+        refresh_token = Authorize.create_refresh_token(subject=user.username)
+
+        return {'access_token': access_token, 'refresh_token': refresh_token}
     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+
+
+@router.post('/refresh')
+def refresh(Authorize: AuthJWT = Depends()):
+    Authorize.jwt_refresh_token_required()
+    current_user = Authorize.get_jwt_subject()
+    admin = Authorize.get_raw_jwt()['admin']
+    new_access_token = Authorize.create_access_token(
+        subject=current_user, user_claims={'admin': admin})
+    return {"access_token": new_access_token}
+
+
+@router.get('/me')
+async def me(Authorize: AuthJWT = Depends()):
+    Authorize.jwt_required()
+
+    me = Authorize.get_jwt_subject()
+    return me
