@@ -11,12 +11,10 @@ app.include_router(auth.router)
 
 setup_jwt(app)
 
-
-register_tortoise(
-    app,
-    db_url='sqlite://gofri.sqlite3',
-    modules={
-        'models': ['app.models.user']
-    },
-    generate_schemas=True
-)
+register_tortoise(app,
+                  db_url='sqlite://gofri.sqlite3',
+                  modules={'models': [
+                      'app.models.user',
+                      'app.models.food',
+                  ]},
+                  generate_schemas=True)
