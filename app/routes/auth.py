@@ -1,3 +1,4 @@
+from app.deps.jwt import needs_jwt
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi_jwt_auth import AuthJWT
 from app.models.user import User
@@ -36,6 +37,8 @@ async def login(data: Login, Authorize: AuthJWT = Depends()):
 def refresh(Authorize: AuthJWT = Depends()):
     Authorize.jwt_refresh_token_required()
     current_user = Authorize.get_jwt_subject()
+    if not current_user:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
     admin = Authorize.get_raw_jwt()['admin']
     new_access_token = Authorize.create_access_token(
         subject=current_user, user_claims={'admin': admin})
@@ -43,8 +46,5 @@ def refresh(Authorize: AuthJWT = Depends()):
 
 
 @router.get('/me')
-async def me(Authorize: AuthJWT = Depends()):
-    Authorize.jwt_required()
-
-    me = Authorize.get_jwt_subject()
-    return me
+async def me(user: User = Depends(needs_jwt)):
+    return user
