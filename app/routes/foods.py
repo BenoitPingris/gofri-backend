@@ -1,7 +1,6 @@
 from app.deps.jwt import needs_jwt
 from app.models.user import User
 from fastapi import APIRouter, UploadFile, File, Depends, status, Form
-from fastapi_jwt_auth import AuthJWT
 from fastapi.exceptions import HTTPException
 from fastapi.responses import FileResponse
 from tortoise.exceptions import DoesNotExist, IntegrityError
