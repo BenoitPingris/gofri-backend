@@ -1,9 +1,10 @@
+from typing import cast
 from app.deps.jwt import needs_jwt
 from app.models.user import User
 from fastapi import APIRouter, UploadFile, File, Depends, status, Form
 from fastapi.exceptions import HTTPException
 from fastapi.responses import FileResponse
-from tortoise.exceptions import DoesNotExist, IntegrityError
+from tortoise.exceptions import IntegrityError
 from app.models.food import Food
 from app.schemas.foods import Food_Pydantic
 import time
@@ -19,19 +20,14 @@ async def fetch_foods():
 
 @router.delete('/{id}')
 async def delete_food(id: str, user: User = Depends(needs_jwt)):
-    food = await Food.get_or_none(id=id)
-    if not food:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+    food = await Food.get_or_404(id=id)
     return await food.delete()
 
 
 @router.get('/{id}/image')
 async def get_image(id: str):
-    try:
-        food = await Food.get(id=id)
-        return FileResponse(food.photo_path)
-    except DoesNotExist:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+    food = cast(Food, await Food.get_or_404(id=id))
+    return FileResponse(food.photo_path)
 
 
 @router.post('')
