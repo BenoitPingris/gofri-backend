@@ -1,9 +1,9 @@
+from app.models.base import Base
 from tortoise import fields
-from tortoise.models import Model
 import bcrypt
 
 
-class User(Model):
+class User(Base):
     id = fields.UUIDField(pk=True)
     username = fields.CharField(25, unique=True)
     password = fields.BinaryField()

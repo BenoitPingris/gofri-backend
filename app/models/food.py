@@ -1,8 +1,8 @@
+from app.models.base import Base
 from tortoise import fields
-from tortoise.models import Model
 
 
-class Food(Model):
+class Food(Base):
     id = fields.UUIDField(pk=True)
     name = fields.CharField(25, unique=True)
     photo_path = fields.CharField(255)

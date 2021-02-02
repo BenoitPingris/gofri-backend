@@ -13,7 +13,7 @@ router = APIRouter(prefix='/foods', tags=['foods'])
 
 
 @router.get('')
-async def fetch_images():
+async def fetch_foods():
     return await Food_Pydantic.from_queryset(Food.all())
 
 
@@ -38,8 +38,8 @@ async def get_image(id: str):
 async def create_food(name: str = Form(...),
                       photo: UploadFile = File(...),
                       user: User = Depends(needs_jwt)):
-    if not user.admin:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+    # if not user.admin:
+    #     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
 
     media = get_settings().media_url
     file_location = f'{media}/{round(time.time() * 10000)}'

@@ -1,6 +1,6 @@
 from typing import Any, Type, Union
+from fastapi import status
 from fastapi.exceptions import HTTPException
-from starlette import status
 from tortoise.models import Model
 from tortoise.query_utils import Q
 
