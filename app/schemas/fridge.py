@@ -1,5 +1,14 @@
+from app.models.fridge import Fridge, FridgeFoods
 import pydantic
 from pydantic.types import constr
+
+from tortoise.contrib.pydantic import pydantic_model_creator
+
+Fridge_Pydantic = pydantic_model_creator(Fridge,
+                                         name='Fridge',
+                                         include=('id', 'name'))
+
+FridgeFoods_Pydantic = pydantic_model_creator(FridgeFoods, name='FridgeFoods')
 
 
 class CreateFridge(pydantic.BaseModel):

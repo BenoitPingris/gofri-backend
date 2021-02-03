@@ -21,7 +21,8 @@ async def fetch_foods():
 @router.delete('/{id}')
 async def delete_food(id: str, user: User = Depends(needs_jwt)):
     food = await Food.get_or_404(id=id)
-    return await food.delete()
+    await food.delete()
+    return 'ok'
 
 
 @router.get('/{id}/image')
@@ -47,6 +48,6 @@ async def create_food(name: str = Form(...),
         raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY)
     try:
         food_created = await Food.create(name=name, photo_path=file_location)
-        return food_created
+        return await Food_Pydantic.from_tortoise_orm(food_created)
     except IntegrityError:
         raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY)

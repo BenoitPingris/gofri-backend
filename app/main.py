@@ -1,7 +1,8 @@
 from fastapi import FastAPI
-from .routes import ping, foods, auth, fridge
 from tortoise.contrib.fastapi import register_tortoise
-from .services.auth import setup_jwt
+
+from app.routes import auth, foods, fridge, ping
+from app.services.auth import setup_jwt
 
 app = FastAPI()
 

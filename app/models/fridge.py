@@ -1,22 +1,21 @@
 from app.models.base import Base
 from tortoise import fields
-from tortoise.models import Model
 
 
 class Fridge(Base):
     id = fields.UUIDField(pk=True)
-    user = fields.ForeignKeyField('models.User', related_name='fridge')
     name = fields.CharField(50, unique=True)
+    user = fields.ForeignKeyField('models.User', related_name='fridge')
 
     class Meta:
         table = "fridges"
 
 
-class FridgeFoods(Model):
+class FridgeFoods(Base):
     id = fields.UUIDField(pk=True)
     fridge = fields.ForeignKeyField('models.Fridge')
     food = fields.ForeignKeyField('models.Food')
-    quantity = fields.IntField()
+    quantity = fields.IntField(default=1)
 
     class Meta:
         table = "fridge_foods"
